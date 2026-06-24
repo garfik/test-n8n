@@ -1,0 +1,110 @@
+{
+  "id": "mZAreVWRu4fvsH2d",
+  "name": "My workflow",
+  "nodes": [
+    {
+      "id": "fcdca366-935a-4a1a-840d-4ffd5f4b0c88",
+      "name": "When clicking ‘Execute workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        128,
+        -128
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "3fd62ae2-a080-42b7-8ea7-5acdc88188ab",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        128,
+        48
+      ],
+      "parameters": {
+        "path": "9d700c5b-a11b-4943-addb-9d1b3f4f0129",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "webhookId": "9d700c5b-a11b-4943-addb-9d1b3f4f0129"
+    },
+    {
+      "id": "d8d00582-24d8-4b7f-813f-0b9c766cfd36",
+      "name": "Code in JavaScript",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        464,
+        -80
+      ],
+      "parameters": {
+        "jsCode": "\nreturn [{'key': 'dev v1'}];"
+      }
+    },
+    {
+      "id": "d98be7bc-1077-45bf-9563-ee6184923489",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        672,
+        -80
+      ],
+      "parameters": {
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "triggerCount": 1,
+  "versionId": "0bee44a4-624d-4088-a588-2c88aa51fd40",
+  "owner": {
+    "type": "personal",
+    "projectId": "xVCVHTzVmokPQUWU",
+    "projectName": "Owner Neightn <test@n8n.io>",
+    "personalEmail": "test@n8n.io"
+  },
+  "parentFolderId": null,
+  "isArchived": false,
+  "nodeGroups": []
+}
