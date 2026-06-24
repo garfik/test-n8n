@@ -39,7 +39,7 @@
         -80
       ],
       "parameters": {
-        "jsCode": "\nreturn [{'key': 'dev v1'}];"
+        "jsCode": "\nreturn [{'key': 'dev v3'}];"
       }
     },
     {
@@ -97,7 +97,7 @@
     "availableInMCP": false
   },
   "triggerCount": 1,
-  "versionId": "0bee44a4-624d-4088-a588-2c88aa51fd40",
+  "versionId": "6bce60f0-1f6f-4266-82c6-c40dc8a4ea94",
   "owner": {
     "type": "personal",
     "projectId": "xVCVHTzVmokPQUWU",
