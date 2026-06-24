@@ -1,0 +1,40 @@
+name: Promote workflows
+
+on:
+  push:
+    branches: [dev, staging]
+    paths: ['workflows/**']
+  workflow_dispatch: {}
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    # dev branch -> staging instance; staging branch -> production instance.
+    environment: ${{ github.ref_name == 'staging' && 'production' || 'staging' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build .n8np from committed workflows
+        run: |
+          npm i tar@^7 --no-save
+          node scripts/build-n8np.mjs workflows out.n8np
+        env:
+          SOURCE_ID: ${{ github.repository }}
+          SOURCE_VERSION: ci-${{ github.sha }}
+
+      - name: Import into target instance (working zone, not published)
+        run: |
+          npx -y @n8n/cli@beta package import \
+            -u "$N8N_URL" -k "$N8N_API_KEY" \
+            --file out.n8np \
+            --conflict-policy=new-version \
+            --workflow-id-policy=source \
+            --credential-missing-mode=create-stub
+        env:
+          # Scoped to the selected environment (staging or production).
+          N8N_URL: ${{ secrets.N8N_URL }}
+          N8N_API_KEY: ${{ secrets.N8N_API_KEY }}
