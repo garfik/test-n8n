@@ -31,7 +31,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\nreturn [{'key': 'dev v4'}];"
+        "jsCode": "\nreturn [{'key': 'dev v5'}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -97,7 +97,7 @@
     "availableInMCP": false
   },
   "triggerCount": 1,
-  "versionId": "a230db3e-e5c7-48fe-8bfa-acb2d984532b",
+  "versionId": "d9d5e7c5-944f-4585-8d6f-3173caa1cab0",
   "owner": {
     "type": "personal",
     "projectId": "owAKOqt1YfA0172S",
