@@ -1,24 +1,26 @@
+# Manual promotion — run on demand, pick a single "from -> to" step.
+#
+# Keep this file on the DEFAULT branch: GitHub only shows the "Run workflow"
+# button for workflows present on the default branch, and dispatch reads the
+# workflow definition from the ref you pick there.
 name: Promote workflows (manual)
 
 on:
   workflow_dispatch:
     inputs:
-      source_ref:
-        description: Branch to promote workflows FROM (e.g. dev, staging)
-        required: true
-        default: dev
-      target:
-        description: Target environment / instance to import INTO
+      promotion:
+        description: Promotion step
         required: true
         type: choice
         options:
-          - staging
-          - production
+          - dev -> staging
+          - staging -> production
 
 jobs:
   promote:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.target }}
+    # Derive the target environment from the single dropdown.
+    environment: ${{ inputs.promotion == 'staging -> production' && 'production' || 'staging' }}
     steps:
       - name: Checkout tooling (default branch)
         uses: actions/checkout@v4
@@ -26,7 +28,8 @@ jobs:
       - name: Checkout workflows from source branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.source_ref }}
+          # Derive the source branch from the same dropdown.
+          ref: ${{ inputs.promotion == 'staging -> production' && 'staging' || 'dev' }}
           path: src
 
       - uses: actions/setup-node@v4
@@ -39,7 +42,7 @@ jobs:
           node scripts/build-n8np.mjs src/workflows out.n8np
         env:
           SOURCE_ID: ${{ github.repository }}
-          SOURCE_VERSION: manual-${{ inputs.source_ref }}
+          SOURCE_VERSION: manual
 
       - name: Import into target instance (working zone, not published)
         run: |
@@ -50,5 +53,6 @@ jobs:
             --workflow-id-policy=source \
             --credential-missing-mode=create-stub
         env:
+          # Scoped to the selected environment (staging or production).
           N8N_URL: ${{ secrets.N8N_URL }}
           N8N_API_KEY: ${{ secrets.N8N_API_KEY }}
